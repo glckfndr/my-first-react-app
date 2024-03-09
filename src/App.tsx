@@ -3,17 +3,15 @@ import Cart from "./components/Cart";
 import NavBar from "./components/NavBar";
 
 function App() {
-  const [game, setGame] = useState({
-    id: 1,
-    player: {
-      name: "John",
-    },
+  const [pizza, setPizza] = useState({
+    name: 'Spicy Pepperoni',
+    toppings: ['Mushrooms']
   });
   const handleClick = () => {
-    setGame({ ...game, player: { ...game.player, name: "Bob" } });
+    setPizza({ ...pizza, toppings: [...pizza.toppings, 'Cheese' ] });
   };
 
-  return <button onClick={handleClick}>{game.player.name}: Click Me</button>;
+  return <button onClick={handleClick}>{pizza.toppings} Click Me</button>;
 }
 
 export default App;
