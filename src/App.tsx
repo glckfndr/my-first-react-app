@@ -3,13 +3,17 @@ import Cart from "./components/Cart";
 import NavBar from "./components/NavBar";
 
 function App() {
-  const [cartItems, setCartItems] = useState(["Product1", "Product2"])
-  return (
-    <>
-      <NavBar cartItemsCount={cartItems.length}/>
-      <Cart  items={cartItems} handleClear={() => setCartItems([])}/>
-    </>
-  );
+  const [game, setGame] = useState({
+    id: 1,
+    player: {
+      name: "John",
+    },
+  });
+  const handleClick = () => {
+    setGame({ ...game, player: { ...game.player, name: "Bob" } });
+  };
+
+  return <button onClick={handleClick}>{game.player.name}: Click Me</button>;
 }
 
 export default App;
