@@ -1,9 +1,15 @@
-import ListGroup from "./components/ListGroup";
+import Like from "./components/Like";
 
 function App() {
-const items = ["New York", "Los Angeles", "San Francisco"]
-    return ( <ListGroup items={items} heading="Miami"
-      onSelectItem={() => console.log("press")}/> );
+  return (
+    <div>
+      <Like
+        size={20}
+        status={false}
+        onClick={() => console.log("Heat is clicked!")}
+      />
+    </div>
+  );
 }
 
 export default App;
