@@ -1,13 +1,25 @@
 import { MouseEventHandler, useState } from "react";
-import styles from './ListGroup.module.css'
+import styled from "styled-components";
 
 interface Props {
   items: string[];
   heading: string;
   onSelectItem: (item: string) => void;
 }
+
+interface LineItemProps {
+  active: boolean;
+}
+const List = styled.ul`
+list-style: none;
+  padding: 0;
+`
+const ListItem = styled.li<LineItemProps>`
+padding: 5px 0;
+background: ${props => props.active ? 'blue': 'none'};
+`
 function ListGroup({ items, heading, onSelectItem }: Props) {
-  const [activeIndex, setActiveIndex] = useState(-1);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   //items = [];
   const message = items.length == 0 && <p>No city is found</p>;
@@ -16,22 +28,20 @@ function ListGroup({ items, heading, onSelectItem }: Props) {
     <>
       <h1>{heading}</h1>
       {message}
-      <ul className={[styles.listGroup, styles.container].join(' ')}>
+      <List>
         {items.map((city, i) => (
-          <li
+          <ListItem
+            active={i === activeIndex}
             key={city}
-            className={
-              i == activeIndex ? "list-group-item active" : "list-group-item"
-            }
             onClick={() => {
               setActiveIndex(i);
               onSelectItem(city);
             }}
           >
             {city}
-          </li>
+          </ListItem>
         ))}
-      </ul>
+      </List>
     </>
   );
 }
