@@ -1,7 +1,8 @@
 import { FormEvent, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 
-function Form() {
-  const [person, setPerson] = useState({name: '', age: ''})
+function Form(): JSX.Element {
+  const [person, setPerson] = useState<{name: string, age:string|number}>({name: '', age: ''})
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
     console.log(person)
