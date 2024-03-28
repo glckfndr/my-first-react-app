@@ -1,13 +1,8 @@
-import axios, { CanceledError } from "axios";
-import { MouseEvent, useEffect, useReducer, useState } from "react";
-
-interface User {
-  id: number;
-  name: string;
-}
+import { useEffect, useState } from "react";
+import { CanceledError } from "./services/api-client";
+import userService, { User } from "./services/user-service";
 
 function App() {
-  const httpAddress = "https://jsonplaceholder.typicode.com/users";
   const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -16,20 +11,17 @@ function App() {
     const initialUsers = [...users];
     setError("");
     setUsers(users.filter((user) => user.id !== id));
-    axios.delete(httpAddress + "/" + id).catch((err) => {
+    userService.deleteUser(id).catch((err) => {
       setError(err.message);
       setUsers(initialUsers);
     });
   };
 
   useEffect(() => {
-    const controller = new AbortController();
     setIsLoading(true);
 
-    axios
-      .get<User[]>(httpAddress, {
-        signal: controller.signal,
-      })
+    const { request, handleCancel } = userService.getAllUsers();
+    request
       .then((res) => {
         setUsers(res.data);
         setIsLoading(false);
@@ -40,15 +32,15 @@ function App() {
         setIsLoading(false);
       });
 
-    return () => controller.abort();
+    return handleCancel;
   }, []);
 
   const addUser = () => {
     const initialUsers = [...users];
     const newUser: User = { name: "Oleh", id: 0 };
     setUsers([newUser, ...users]);
-    axios
-      .post(httpAddress, newUser)
+    userService
+      .addUser(newUser)
       .then(({ data: savedUser }) => setUsers([savedUser, ...initialUsers]))
       .catch((err) => {
         setError(err.message);
@@ -60,8 +52,8 @@ function App() {
     const initialUsers = [...users];
     const updatedUser: User = { ...user, name: user.name + "!!!" };
     setUsers(users.map((usr) => (usr.id === user.id ? updatedUser : usr)));
-    axios
-      .patch(httpAddress + "/" + user.id, updatedUser)
+    userService
+      .updateUser(updatedUser)
       .then(({ data: newUser }) =>
         setUsers(users.map((usr) => (usr.id === user.id ? newUser : usr)))
       )
