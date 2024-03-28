@@ -56,6 +56,21 @@ function App() {
       });
   };
 
+  const updateUser = (user: User) => {
+    const initialUsers = [...users];
+    const updatedUser: User = { ...user, name: user.name + "!!!" };
+    setUsers(users.map((usr) => (usr.id === user.id ? updatedUser : usr)));
+    axios
+      .patch(httpAddress + "/" + user.id, updatedUser)
+      .then(({ data: newUser }) =>
+        setUsers(users.map((usr) => (usr.id === user.id ? newUser : usr)))
+      )
+      .catch((err) => {
+        setError(err.message);
+        setUsers(initialUsers);
+      });
+  };
+
   return (
     <div>
       {error && <p className="text-danger">{error}</p>}
@@ -73,12 +88,20 @@ function App() {
           >
             {user.id + ". "}
             {user.name}
-            <button
-              className="btn btn-outline-danger"
-              onClick={() => deleteUser(user.id)}
-            >
-              Delete
-            </button>
+            <div>
+              <button
+                className="btn btn-outline-primary mx-2"
+                onClick={() => updateUser(user)}
+              >
+                Update
+              </button>
+              <button
+                className="btn btn-outline-danger"
+                onClick={() => deleteUser(user.id)}
+              >
+                Delete
+              </button>
+            </div>
           </li>
         ))}
       </ul>
