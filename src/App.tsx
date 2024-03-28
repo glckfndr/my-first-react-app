@@ -1,34 +1,21 @@
-import { useState } from "react";
-import ExpenseFilter from "./expense-tracker/components/ExpenseFilter";
-import ExpenseForm from "./expense-tracker/components/ExpenseForm";
-import ExpenseList from "./expense-tracker/components/ExpenseList";
-import categories from "./expense-tracker/components/categories";
-import { Expense, expenseData } from "./expense-tracker/components/expenseData";
+import { useEffect, useState } from "react";
+import ProductList from "./components/ProductList";
 
 function App() {
-  const allCat = "All Categories";
-  const [category, setCategory] = useState<string>(allCat);
-  const [expenses, setExpenses] = useState(expenseData);
-
-  const handleDelete = (id: number) => {
-    setExpenses([...expenses].filter((el) => el.id !== id));
-  };
+  const [category, setCategory] = useState("");
 
   return (
-    <>
-      <ExpenseForm
-        onSubmit={(data) => setExpenses([...expenses, { id: 100, ...data }])}
-      />
-      <ExpenseFilter
-        categories={[allCat, ...categories]}
-        onChange={(category) => setCategory(category)}
-      />
-      <ExpenseList
-        expenseData={expenses}
-        category={category}
-        handleDelete={handleDelete}
-      />
-    </>
+    <div>
+      <select
+        className="form-select"
+        onChange={(ev) => setCategory(ev.target.value)}
+      >
+        <option value=""></option>
+        <option value="Clothing">Clothing</option>
+        <option value="HouseHold">HouseHold</option>
+      </select>
+      <ProductList category={category} />
+    </div>
   );
 }
 
