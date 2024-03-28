@@ -43,21 +43,38 @@ function App() {
     return () => controller.abort();
   }, []);
 
+  const addUser = () => {
+    const initialUsers = [...users];
+    const newUser: User = { name: "Oleh", id: 0 };
+    setUsers([newUser, ...users]);
+    axios
+      .post(httpAddress, newUser)
+      .then(({ data: savedUser }) => setUsers([savedUser, ...initialUsers]))
+      .catch((err) => {
+        setError(err.message);
+        setUsers(initialUsers);
+      });
+  };
+
   return (
     <div>
       {error && <p className="text-danger">{error}</p>}
       {isLoading && (
         <div className="spinner-border text-danger" role="status"></div>
       )}
+      <button className="btn btn-primary mb-3" onClick={addUser}>
+        Add
+      </button>
       <ul className={"list-group"}>
         {users.map((user) => (
           <li
             key={user.id}
             className={"list-group-item  d-flex justify-content-between"}
           >
+            {user.id + ". "}
             {user.name}
             <button
-              className="btn btn-danger"
+              className="btn btn-outline-danger"
               onClick={() => deleteUser(user.id)}
             >
               Delete
